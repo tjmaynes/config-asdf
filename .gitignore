@@ -1,0 +1,11 @@
+# Macos
+.DS_Store
+
+# Generated
+*.log
+*.zip
+*.tar.gz
+
+# Editors
+.idea/
+.vscode/
