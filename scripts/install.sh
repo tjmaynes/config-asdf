@@ -50,7 +50,7 @@ function install_macos_packages() {
   done
 
 
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord)
   for package in "${CASK_PACKAGES[@]}"; do
     if ! brew list --cask | grep -q "$package" &> /dev/null; then
       brew install --cask "$package"
