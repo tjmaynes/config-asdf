@@ -2,6 +2,24 @@
 
 set -e
 
+function install_macos_store_package() {
+  if [[ -z "/Applications/$1.app" ]]; then
+    mas install $2 
+  fi
+}
+
+function install_brew_package() {
+  if [[ -z "$(command -v $1)" ]]; then
+    brew install "$1"
+  fi
+}
+
+function install_brew_cask_package() {
+  if ! brew list --cask | grep -q "$1" &> /dev/null; then
+    brew install --cask "$1"
+  fi
+}
+
 function install_linux_packages() {
   apt update && apt upgrade -y
 
@@ -42,21 +60,19 @@ function install_macos_packages() {
 
   brew update && brew upgrade
 
-  BREW_PACKAGES=(git zsh bat delta colima ffmpeg htop jq lsd stow tmux unzip docker)
+  BREW_PACKAGES=(git zsh bat delta colima ffmpeg htop jq lsd stow tmux unzip docker mas)
   for package in "${BREW_PACKAGES[@]}"; do
-    if [[ -z "$(command -v $package)" ]]; then
-      brew install "$package"
-    fi
+    install_brew_package "$package"
   done
 
-
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager)
   for package in "${CASK_PACKAGES[@]}"; do
-    if ! brew list --cask | grep -q "$package" &> /dev/null; then
-      brew install --cask "$package"
-    fi
+    install_brew_cask_package "$package"
   done
 
+  install_macos_store_package "Final\ Cut\ Pro" "424389933"
+  install_macos_store_package "Daisy\ Disk" "411643860"
+  install_macos_store_package "Bitwarden" "1352778147"
 }
 
 function install_packages() {
