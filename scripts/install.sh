@@ -3,7 +3,7 @@
 set -e
 
 function install_macos_store_package() {
-  if [[ -z "/Applications/$1.app" ]]; then
+  if [[ ! -d "/Applications/$1.app" ]]; then
     mas install $2 
   fi
 }
@@ -70,8 +70,8 @@ function install_macos_packages() {
     install_brew_cask_package "$package"
   done
 
-  install_macos_store_package "Final\ Cut\ Pro" "424389933"
-  install_macos_store_package "Daisy\ Disk" "411643860"
+  install_macos_store_package "Final Cut Pro" "424389933"
+  install_macos_store_package "Daisy Disk" "411643860"
   install_macos_store_package "Bitwarden" "1352778147"
 }
 
