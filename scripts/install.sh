@@ -73,6 +73,7 @@ function install_macos_packages() {
   install_macos_store_package "Final Cut Pro" "424389933"
   install_macos_store_package "Daisy Disk" "411643860"
   install_macos_store_package "Bitwarden" "1352778147"
+  install_macos_store_package "Amphetamine" "937984704"
 }
 
 function install_packages() {
