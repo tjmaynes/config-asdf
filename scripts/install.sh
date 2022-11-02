@@ -4,7 +4,7 @@ set -e
 
 function install_macos_store_package() {
   if [[ ! -d "/Applications/$1.app" ]]; then
-    mas install $2 
+    mas install "$2"
   fi
 }
 
@@ -65,13 +65,13 @@ function install_macos_packages() {
     install_brew_package "$package"
   done
 
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager)
+  CASK_PACKAGES=(emacs macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox)
   for package in "${CASK_PACKAGES[@]}"; do
     install_brew_cask_package "$package"
   done
 
   install_macos_store_package "Final Cut Pro" "424389933"
-  install_macos_store_package "Daisy Disk" "411643860"
+  install_macos_store_package "DaisyDisk" "411643860"
   install_macos_store_package "Bitwarden" "1352778147"
   install_macos_store_package "Amphetamine" "937984704"
 }
@@ -120,10 +120,10 @@ function install_direnv() {
 
 function install_fonts() {
   if [[ ! -d "$HOME/.fonts" ]]; then
-    git clone https://github.com/themichaelyang/programming-fonts.git $HOME/.fonts
+    git clone https://github.com/themichaelyang/programming-fonts.git "$HOME/.fonts"
   fi
 
-  pushd $HOME/.fonts
+  pushd "$HOME/.fonts"
   ./install.sh 
   popd
 }
