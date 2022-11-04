@@ -20,6 +20,20 @@ function install_brew_cask_package() {
   fi
 }
 
+function install_asdf_plugin() {
+  if [[ ! -d "$HOME/.asdf" ]]; then
+    git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch v0.10.2
+  fi
+
+  if [[ -z "$(command -v asdf)" ]]; then
+    source "$HOME/.asdf/asdf.sh"
+  fi
+
+  if ! asdf list | grep -q "$1" &> /dev/null; then
+    asdf plugin add "$1" "$2"
+  fi
+}
+
 function install_linux_packages() {
   apt update && apt upgrade -y
 
@@ -65,7 +79,7 @@ function install_macos_packages() {
     install_brew_package "$package"
   done
 
-  CASK_PACKAGES=(emacs macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3)
   for package in "${CASK_PACKAGES[@]}"; do
     install_brew_cask_package "$package"
   done
@@ -90,20 +104,10 @@ function install_zprezto() {
   fi
 }
 
-function install_asdf() {
-  if [[ ! -d "$HOME/.asdf" ]]; then
-    git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch v0.10.2
-  fi
-
-  source "$HOME/.asdf/asdf.sh"
-
-  if ! asdf list | grep -q "golang" &> /dev/null; then 
-    asdf plugin add golang https://github.com/kennyp/asdf-golang.git
-  fi
-
-  if ! asdf list | grep -q "nodejs" &> /dev/null; then 
-    asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-  fi
+function install_asdf_plugins() {
+  install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
+  install_asdf_plugin "golang" "https://github.com/kennyp/asdf-golang.git"
+  install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
 }
 
 function install_direnv() {
@@ -141,7 +145,7 @@ function main() {
   install_packages
 
   install_zprezto
-  install_asdf
+  install_asdf_plugins
   install_direnv
   install_fonts
 
