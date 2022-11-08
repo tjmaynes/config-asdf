@@ -2,15 +2,19 @@
 
 set -e
 
-function install_macos_store_package() {
-  if [[ ! -d "/Applications/$1.app" ]]; then
-    mas install "$2"
+function ensure_program_installed() {
+  if [[ -n "$1" ]] && [[ -z "$(command -v $1)" ]]; then
+    if [[ "$OSTYPE" = "darwin"* ]]; then
+      brew install "$1"
+    else
+      apt-get install -y --no-install-recommends "$1"
+    fi
   fi
 }
 
-function install_brew_package() {
-  if [[ -z "$(command -v $1)" ]]; then
-    brew install "$1"
+function install_macos_store_package() {
+  if [[ ! -d "/Applications/$1.app" ]]; then
+    mas install "$2"
   fi
 }
 
@@ -34,29 +38,41 @@ function install_asdf_plugin() {
   fi
 }
 
+function install_docker_on_linux() {
+  if [[ -z "$(command -v docker)" ]]; then
+    apt install apt-transport-https ca-certificates curl software-properties-common -y
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+
+    apt install docker-ce -y
+
+    systemctl start docker
+    systemctl enable docker
+
+    usermod -aG docker tjmaynes
+    newgrp docker
+  fi
+}
+
+function install_colima_on_linux() {
+  COLIMA_VERSION=v0.4.6
+
+  if [[ -z "$(command -v colima)" ]]; then
+    curl -LO https://github.com/abiosoft/colima/releases/download/${COLIMA_VERSION}/colima-$(uname)-$(uname -m)
+    install colima-$(uname)-$(uname -m) /usr/local/bin/colima
+  fi
+}
+
 function install_linux_packages() {
   apt update && apt upgrade -y
 
-  apt install -y --no-install-recommends \
-    bat \
-    curl \
-    delta \
-    emacs \
-    ffmpeg \
-    git \
-    make \
-    gnupg \
-    htop \
-    jq \
-    pandoc \
-    ripgrep \
-    stow \
-    tmux \
-    unzip \
-    vim \
-    yarn \
-    zip \
-    zsh
+  DEB_PACKAGES=(bat curl delta emacs ffmpeg git gnupg htop make jq lsd pandoc ripgrep stow tmux unzip vim zip zsh)
+  for package in "${DEB_PACKAGES[@]}"; do
+    ensure_program_installed "$package"
+  done
+
+  install_docker_on_linux
+  install_colima_on_linux
 
   echo ""
 }
@@ -76,10 +92,10 @@ function install_macos_packages() {
 
   BREW_PACKAGES=(git zsh bat delta colima ffmpeg htop jq lsd stow tmux unzip docker mas)
   for package in "${BREW_PACKAGES[@]}"; do
-    install_brew_package "$package"
+    ensure_program_installed "$package"
   done
 
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3 onedrive)
   for package in "${CASK_PACKAGES[@]}"; do
     install_brew_cask_package "$package"
   done
@@ -105,9 +121,9 @@ function install_zprezto() {
 }
 
 function install_asdf_plugins() {
-  install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
   install_asdf_plugin "golang" "https://github.com/kennyp/asdf-golang.git"
   install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
+  install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
 }
 
 function install_direnv() {
