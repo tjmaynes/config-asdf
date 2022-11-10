@@ -63,16 +63,23 @@ function install_colima_on_linux() {
   fi
 }
 
+function install_fonts() {
+  if [[ ! -d "$HOME/.fonts" ]]; then
+    git clone https://github.com/themichaelyang/programming-fonts.git "$HOME/.fonts"
+  fi
+
+  pushd "$HOME/.fonts"
+  ./install.sh 
+  popd
+}
+
 function install_linux_packages() {
   apt update && apt upgrade -y
 
-  DEB_PACKAGES=(bat curl delta emacs ffmpeg git gnupg htop make jq lsd pandoc ripgrep stow tmux unzip vim zip zsh)
+  DEB_PACKAGES=(bat curl delta emacs ffmpeg git gnupg htop make jq pandoc ripgrep stow tmux unzip vim zip zsh)
   for package in "${DEB_PACKAGES[@]}"; do
     ensure_program_installed "$package"
   done
-
-  install_docker_on_linux
-  install_colima_on_linux
 
   echo ""
 }
@@ -104,6 +111,8 @@ function install_macos_packages() {
   install_macos_store_package "DaisyDisk" "411643860"
   install_macos_store_package "Bitwarden" "1352778147"
   install_macos_store_package "Amphetamine" "937984704"
+
+  install_fonts
 }
 
 function install_packages() {
@@ -138,16 +147,6 @@ function install_direnv() {
   echo ""
 }
 
-function install_fonts() {
-  if [[ ! -d "$HOME/.fonts" ]]; then
-    git clone https://github.com/themichaelyang/programming-fonts.git "$HOME/.fonts"
-  fi
-
-  pushd "$HOME/.fonts"
-  ./install.sh 
-  popd
-}
-
 function setup_dotfiles() {
   if [[ ! -d "../dotfiles" ]]; then
     echo "Please place 'dotfiles' right outside the root of the project"
@@ -163,7 +162,6 @@ function main() {
   install_zprezto
   install_asdf_plugins
   install_direnv
-  install_fonts
 
   setup_dotfiles
 }
