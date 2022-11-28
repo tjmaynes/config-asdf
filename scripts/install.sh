@@ -133,13 +133,10 @@ function install_asdf_plugins() {
   install_asdf_plugin "golang" "https://github.com/kennyp/asdf-golang.git"
   install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
   install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
+  install_asdf_plugin "direnv" "https://github.com/asdf-community/asdf-direnv.git"
 }
 
 function install_direnv() {
-  if [[ -z "$(command -v direnv)" ]]; then
-    asdf plugin add direnv
-  fi
-
   asdf direnv setup \
     --shell zsh \
     --version latest 
@@ -164,6 +161,8 @@ function main() {
   install_direnv
 
   setup_dotfiles
+
+  asdf install
 }
 
 main
