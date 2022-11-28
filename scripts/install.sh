@@ -102,7 +102,7 @@ function install_macos_packages() {
     ensure_program_installed "$package"
   done
 
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3 onedrive)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3 qutebrowser)
   for package in "${CASK_PACKAGES[@]}"; do
     install_brew_cask_package "$package"
   done
