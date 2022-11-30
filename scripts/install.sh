@@ -111,6 +111,9 @@ function install_macos_packages() {
   install_macos_store_package "DaisyDisk" "411643860"
   install_macos_store_package "Bitwarden" "1352778147"
   install_macos_store_package "Amphetamine" "937984704"
+  install_macos_store_package "Minimoog Model D Synthesizer" "1339418001"
+  install_macos_store_package "Model 15 Modular Synthesizer" "1041465860"
+  install_macos_store_package "Animoog Z Synthesizer" "1586841361"
 
   install_fonts
 }
