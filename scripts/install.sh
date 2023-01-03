@@ -102,7 +102,7 @@ function install_macos_packages() {
     ensure_program_installed "$package"
   done
 
-  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3 qutebrowser)
+  CASK_PACKAGES=(macvim iterm2 calibre mpv obs vcv-rack visual-studio-code arduino discord notion raspberry-pi-imager zoom jetbrains-toolbox kid3 google-chrome onedrive)
   for package in "${CASK_PACKAGES[@]}"; do
     install_brew_cask_package "$package"
   done
@@ -133,9 +133,9 @@ function install_zprezto() {
 }
 
 function install_asdf_plugins() {
+  install_asdf_plugin "dotnet-core" "https://github.com/emersonsoares/asdf-dotnet-core.git"
   install_asdf_plugin "golang" "https://github.com/kennyp/asdf-golang.git"
   install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
-  install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
   install_asdf_plugin "direnv" "https://github.com/asdf-community/asdf-direnv.git"
 }
 
